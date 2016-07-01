@@ -1,7 +1,9 @@
 #!/usr/bin/env/python
 
+import time
 from autobahn.twisted.websocket import WebSocketServerProtocol, \
-    WebSocketServerFactory
+    WebSocketServerFactory, \
+    connectWS
 
 class MyServerProtocol(WebSocketServerProtocol):
 
@@ -11,11 +13,19 @@ class MyServerProtocol(WebSocketServerProtocol):
     def onOpen(self):
         print("WebSocket connection open.")
 
+    def onPing(self, payload):
+        print("Ping Received")
+        self.sendPong()
+
     def onMessage(self, payload, isBinary):
         if isBinary:
             print("Binary message received: {0} bytes".format(len(payload)))
         else:
             print("Text message received: {0}".format(payload.decode('utf8')))
+        
+        if str(payload.decode('utf8')).endswith('#'):
+            now = time.time()
+            self.sendMessage(str(now)+'#')
 
         # echo back message verbatim
         self.sendMessage(payload, isBinary)

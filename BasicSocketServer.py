@@ -8,6 +8,10 @@ class SimpleHandler(WebSocket):
 
     def handleMessage(self):
         print("Message Received: " + str(self.data))
+        if str(self.data) == "SHUTDOWN":
+            print("Shutdown signal received, exiting...")
+            self.close()
+            sys.exit(0)
 
     def handleConnected(self):
         print("New Connection: " + str(self.address))
@@ -16,8 +20,8 @@ class SimpleHandler(WebSocket):
         print("Closed Connection: " + str(self.address))
 
 def signal_handler(signal, frame):
-    print(" SIGINT received, exiting...")
-    server.close
+    print("SIGINT received, exiting...")
+    server.close()
     sys.exit(0)
 
 if __name__ == '__main__':

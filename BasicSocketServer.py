@@ -25,10 +25,15 @@ def signal_handler(signal, frame):
     server.close()
     sys.exit(0)
 
+def get_ip_address():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(("8.8.8.8", 80))
+    return s.getsockname()[0]
+
 if __name__ == '__main__':
     port = 9000
-    ipaddr = socket.gethostbyname(socket.gethostname())
-
+    # ipaddr = socket.gethostbyname(socket.gethostname())
+    ipaddr = get_ip_address()
     server = SimpleWebSocketServer(str(ipaddr), port, SimpleHandler)
     print("Serving TCP Socket on " + str(ipaddr) + ":" + str(port))
 

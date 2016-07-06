@@ -2,6 +2,7 @@
 
 import signal
 import sys
+import socket
 from SimpleWebSocketServer import SimpleWebSocketServer, WebSocket
 
 class SimpleHandler(WebSocket):
@@ -25,7 +26,12 @@ def signal_handler(signal, frame):
     sys.exit(0)
 
 if __name__ == '__main__':
-    server = SimpleWebSocketServer('127.0.0.1', 9000, SimpleHandler)
+    port = 9000
+    ipaddr = socket.gethostbyname(socket.gethostname())
+
+    server = SimpleWebSocketServer(str(ipaddr), port, SimpleHandler)
+    print("Serving TCP Socket on " + str(ipaddr) + ":" + str(port))
+
     signal.signal(signal.SIGINT, signal_handler)
     server.serveforever()
     signal.pause()

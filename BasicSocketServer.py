@@ -2,6 +2,7 @@
 
 import signal
 import sys
+import os
 import socket
 from SimpleWebSocketServer import SimpleWebSocketServer, WebSocket
 
@@ -13,6 +14,8 @@ class SimpleHandler(WebSocket):
             print("Shutdown signal received, exiting...")
             self.close()
             sys.exit(0)
+	if str(self.data)[:1] == "RUN":
+            os.system(RoombaControl.py) 
 
     def handleConnected(self):
         print("New Connection: " + str(self.address))

@@ -14,20 +14,18 @@ class SimpleHandler(WebSocket):
             print("Shutdown signal received, exiting...")
             self.close()
             sys.exit(0)
-	if str(self.data) == "START":
+        if str(self.data) == "START":
             print("Signalled to begin")
             self.sendMessage(unicode('VSTART'))
             # START MAIN PROGRAM
-            # os.system(RoombaControl.py) 
-
+            # os.system(RoombaControl.py)
         if str(self.data) == "READING":
             print("Signalled to read, stopping movement")
-            self.sendMessage(unicode('VREADING')
+            self.sendMessage(unicode('VREADING'))
             # STOP ROVER MOVEMENT
-
         if str(self.data) == "READNOW":
             print("Taking reading...")
-            self.sendMessage(unicode('VREADNOW')
+            self.sendMessage(unicode('VREADNOW'))
             # SPIN MOTOR
             print("Done taking reading")
 

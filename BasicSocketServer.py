@@ -4,6 +4,7 @@ import signal
 import sys
 import os
 import socket
+import spin_once
 from SimpleWebSocketServer import SimpleWebSocketServer, WebSocket
 
 class SimpleHandler(WebSocket):
@@ -14,20 +15,28 @@ class SimpleHandler(WebSocket):
             print("Shutdown signal received, exiting...")
             self.close()
             sys.exit(0)
+
         if str(self.data) == "START":
             print("Signalled to begin")
             self.sendMessage(unicode('VSTART'))
             # START MAIN PROGRAM
             # os.system(RoombaControl.py)
+
         if str(self.data) == "READING":
             print("Signalled to read, stopping movement")
             self.sendMessage(unicode('VREADING'))
             # STOP ROVER MOVEMENT
+
         if str(self.data) == "READNOW":
             print("Taking reading...")
             self.sendMessage(unicode('VREADNOW'))
             # SPIN MOTOR
+            spin_once.spin()
             print("Done taking reading")
+
+        if str(self.data) == "ENDEXP":
+            print("Signalled End of experiment")
+            # RUN CLEAN UP SCRIPTS
 
     def handleConnected(self):
         print("New Connection: " + str(self.address))

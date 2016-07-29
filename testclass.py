@@ -116,133 +116,139 @@ TICK_PER_MM = TICK_PER_REVOLUTION/(math.pi*WHEEL_DIAMETER)
 ANGULAR_ERROR = 360.0/450.0
 
 class Roomba:
-	ser = serial.Serial("/dev/ttyAMA0",baudrate = 115200,timeout = 0.1)
-        def _write(self,byte):
-            self.ser.write(byte)
-        
-        def _start(self):
-                self._write( START )
-                # they recommend 20 ms between mode-changing commands
-                time.sleep(0.25)
-                # change the mode we think we're in...
-    		return
-        
-        def _safe(self):
-   		self._write( SAFE )
-         	time.sleep(0.25)
-        	return
-        
-        def _clean(self):
-        	self._write( CLEAN )
-        	time.sleep(0.25)
-       		return
- 
-	def getUnsignedNumber(self,number, bitLength):
-    		mask = pow(2,bitLength) - 1
-    		return number & mask
+    ser = serial.Serial("/dev/ttyAMA0",baudrate = 115200,timeout = 0.1)
+    def _write(self,byte):
+        self.ser.write(byte)
+    
+    def _start(self):
+        self._write( START )
+        # they recommend 20 ms between mode-changing commands
+        time.sleep(0.25)
+        # change the mode we think we're in...
+        return
+    
+    def _safe(self):
+        self._write( SAFE )
+        time.sleep(0.25)
+        return
+    
+    def _clean(self):
+        self._write( CLEAN )
+        time.sleep(0.25)
+        return
+
+    def getUnsignedNumber(self,number, bitLength):
+        mask = pow(2,bitLength) - 1
+        return number & mask
+    
+    def getSignedNumber(self,number, bitLength):
+        mask = pow(2,bitLength) - 1
+        if number & (1 << (bitLength - 1)):
+            return number | ~mask
+        else:
+            return number & mask
+    
+    def bytes2valunsigned(self,highbyte, lowbyte):
+        #ipdb.set_trace()
+        number = (highbyte<<8)+lowbyte
+        return self.getUnsignedNumber(number,16)
+    
+    def bytes2val(self,highbyte, lowbyte):
+        #ipdb.set_trace()
+        number = (highbyte<<8)+lowbyte
+        return self.getSignedNumber(number,16)
+    
+    def _sensorstasis(self):
+        self._write( SENSORS )
+        self._write( STASIS)
+        resp2=self.ser.read(1)
+        s=(int((resp2).encode('hex'), 16))
+        #print ('stasis='+str(s))
+        return s
+            
+    def _sensors(self):
+        self._write( SENSORS )
+        self._write( DISTANCE )
+        resp=self.ser.read(2)
+        self._write( SENSORS )
+        self._write( ANGLE )
+        resp1=self.ser.read(2)
+        d=self.bytes2val(ord(resp[0]),ord(resp[1]))
+        print ('distance='+str(d))
+        a=self.bytes2val(ord(resp1[0]),ord(resp1[1]))
+        print ('angle='+str(a))
+        return d,a
+
+    def _sensEncoders(self):
+        self._write( SENSORS )
+        self._write( ENCODER_LEFT  )
+        resp=self.ser.read(2)
+        self._write( SENSORS )
+        self._write( ENCODER_RIGHT )
+        resp1=self.ser.read(2)
+        #print (int((resp).encode('hex'), 16))
+        #print (int((resp1).encode('hex'), 16))
+        left=self.bytes2valunsigned(ord(resp[0]),ord(resp[1]))
+        #print ('left='+str(left))
+        right=self.bytes2valunsigned(ord(resp1[0]),ord(resp1[1]))
+        #print ('right='+str(right))
+        #diff = right-left
+        #print ('diff =' +str(diff))
+        #distr= (right*72*math.pi/508.8)
+        #distl= (left*72*math.pi/508.8)
+        #angle= (distr-distl)/258.8
+        ##angle = ((diff*72*math.pi/508.8)/235)
+        #print ('angle =' +str(angle))
+        return left,right
+
+    def _dataCalc(self):
+        old_left,old_right =self._sensEncoders()
+        time.sleep(0.8)
+        #print ('old_left='+str(old_left))
+        #print ('old_right='+str(old_right))
+        cur_left,cur_right = self._sensEncoders()
+        #print ('cur_left='+str(cur_left))
+        #print ('cur_right='+str(cur_right))
+        left = cur_left - old_left
+        right = cur_right - old_right
+        #print ('left='+str(left))
+        #print ('right='+str(right))
+        diff = right-left
+        #print ('diff =' +str(diff))
+        distr= (right*72*math.pi/508.8)
+        distl= (left*72*math.pi/508.8)
+        #print ('distl =' +str(distl))
+        #print ('distr =' +str(distr))
+        angle= ((distr-distl)*360)/(258.8*math.pi)
+        print ('angle =' +str(angle))
+
+        ''' if (angle>0):
+                angleInterp = angle-90
+        else:
+                angleInterp = angle+90 
+
+        print ('angleInterp = '+str(angleInterp))'''
 	
-        def getSignedNumber(self,number, bitLength):
-                mask = pow(2,bitLength) - 1
-                if number & (1 << (bitLength - 1)):
-                        return number | ~mask
-                else:
-                        return number & mask
-	
-	def bytes2valunsigned(self,highbyte, lowbyte):
-                #ipdb.set_trace()
-                number = (highbyte<<8)+lowbyte
-                return self.getUnsignedNumber(number,16)
-	
-        def bytes2val(self,highbyte, lowbyte):
-                #ipdb.set_trace()
-                number = (highbyte<<8)+lowbyte
-                return self.getSignedNumber(number,16)
-	
-	def _sensorstasis(self):
-		self._write( SENSORS )
-		self._write( STASIS)
-		resp2=self.ser.read(1)
-		s=(int((resp2).encode('hex'), 16))
-		#print ('stasis='+str(s))
-		return s
-		
-	def _sensors(self):
-                self._write( SENSORS )
-                self._write( DISTANCE )
-		resp=self.ser.read(2)
-		self._write( SENSORS )
-                self._write( ANGLE )
-                resp1=self.ser.read(2)
-		d=self.bytes2val(ord(resp[0]),ord(resp[1]))
-		print ('distance='+str(d))
-		a=self.bytes2val(ord(resp1[0]),ord(resp1[1]))
-		print ('angle='+str(a))
-		return d,a
+    def toHex(self, value):
+        """ returns two bytes (ints) in high, low order
+        whose bits form the input value when interpreted in
+        two's complement
+        """
+        if value >= 0:
+            eqBitVal = value
+        else:
+            eqBitVal = (1<<16) + value
 
-	def _sensEncoders(self):
-                self._write( SENSORS )
-                self._write( ENCODER_LEFT  )
-                resp=self.ser.read(2)
-                self._write( SENSORS )
-                self._write( ENCODER_RIGHT )
-                resp1=self.ser.read(2)
-		#print (int((resp).encode('hex'), 16))
-		#print (int((resp1).encode('hex'), 16))
-                left=self.bytes2valunsigned(ord(resp[0]),ord(resp[1]))
-                #print ('left='+str(left))
-                right=self.bytes2valunsigned(ord(resp1[0]),ord(resp1[1]))
-                #print ('right='+str(right))
-                #diff = right-left
-                #print ('diff =' +str(diff))
-                #distr= (right*72*math.pi/508.8)
-                #distl= (left*72*math.pi/508.8)
-                #angle= (distr-distl)/258.8
-                ##angle = ((diff*72*math.pi/508.8)/235)
-                #print ('angle =' +str(angle))
-                return left,right
+        return ( (eqBitVal >> 8) & 0xFF, eqBitVal & 0xFF )
 
-	def _dataCalc(self):
-		old_left,old_right =self._sensEncoders()
-		time.sleep(0.8)
-                #print ('old_left='+str(old_left))
-                #print ('old_right='+str(old_right))
-		cur_left,cur_right = self._sensEncoders()
-		#print ('cur_left='+str(cur_left))
-                #print ('cur_right='+str(cur_right))
-		left = cur_left - old_left
-		right = cur_right - old_right
-		#print ('left='+str(left))
-                #print ('right='+str(right))
-		diff = right-left
-                #print ('diff =' +str(diff))
-                distr= (right*72*math.pi/508.8)
-                distl= (left*72*math.pi/508.8)
-                #print ('distl =' +str(distl))
-                #print ('distr =' +str(distr))
-                angle= ((distr-distl)*360)/(258.8*math.pi)
-                print ('angle =' +str(angle))
-
-                ''' if (angle>0):
-			angleInterp = angle-90
-		else:
-			angleInterp = angle+90 
-
-		print ('angleInterp = '+str(angleInterp))'''
-
-	
-	
-	
-
-	def _forward(self):
-		(vel_high,vel_low) = hex(50)
-		(radius_high, radius_low) = hex(0)
-                self._write( chr(137) )
-		self._write( chr(vel_high) )
-		self._write( chr(vel_low) )
-		self._write( chr(radius_high) )
-		self._write( chr(radius_low) )
-                #time.sleep(0.25)
-                return
-
-
+    def forward(self):
+        (vel_high, vel_low) = self.toHex(50)
+        (radius_high, radius_low) = self.toHex(0)
+        self._write( chr(137) )
+        self._write( chr(vel_high) )
+        self._write( chr(vel_low) )
+        self._write( chr(radius_high) )
+        self._write( chr(radius_low) )
+        #time.sleep(0.25)
+        return
 

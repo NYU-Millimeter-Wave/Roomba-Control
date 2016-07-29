@@ -4,7 +4,7 @@ import signal
 import sys
 import os
 import socket
-import spin_once
+import Spin
 from SimpleWebSocketServer import SimpleWebSocketServer, WebSocket
 
 class SimpleHandler(WebSocket):
@@ -26,12 +26,12 @@ class SimpleHandler(WebSocket):
             print("Signalled to read, stopping movement")
             self.sendMessage(unicode('VREADING'))
             # STOP ROVER MOVEMENT
+            print("Movement halted")
 
         if str(self.data) == "READNOW":
             print("Taking reading...")
             self.sendMessage(unicode('VREADNOW'))
-            # SPIN MOTOR
-            spin_once.spin()
+            Spin.spin()
             print("Done taking reading")
 
         if str(self.data) == "ENDEXP":

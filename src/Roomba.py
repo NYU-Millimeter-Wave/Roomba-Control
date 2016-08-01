@@ -3,6 +3,8 @@
 import time
 import math
 import serial
+import asyncio
+from subprocess import Popen
 
 class Roomba:
 
@@ -14,6 +16,21 @@ class Roomba:
         self.start()
 	self.safe()
         self.stop()
+        self.stasis = False
+        self.watchStasis()
+        print("Roomba is ready")
+
+    @asyncio.coroutine
+    def watchStasis(self):
+        while True:
+            self.stasis = self.getStasis()
+            print("Current Stasis:" + self.stasis)
+            time.sleep(0.20)
+            if self.stasis == 0:
+                self.drive(-500, 0)
+                time.sleep(0.5)
+                self.turn()
+                self.forward()
 
     # Drive Methods
 

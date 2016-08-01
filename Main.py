@@ -1,15 +1,29 @@
 #!/usr/bin/env/python
 
-import Roomba
+import time
+import math
+import serial
+from Roomba import Roomba
 
-if __name__ == '__main__':
+def test():
     roomba = Roomba()
-    roomba.forward()
-    
+    #roomba.forward()
+    #time.sleep(2)
+    #roomba.stop()
+    #roomba.turn()
+    #roomba.forward()
+    #time.sleep(2)
+    #roomba.stop()
+    #roomba.safe()
+
     while(True):
         stasis = roomba.getStasis()
-        if stasis == 1:
+        if stasis == 0:
             roomba.turn()
-            roomba.forward()
+        roomba.forward()
         time.sleep(0.25)
+
+if __name__ == '__main__':
+    test()
+
 

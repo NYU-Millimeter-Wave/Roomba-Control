@@ -4,36 +4,42 @@ import time
 import math
 import serial
 
-class Roomba(object):
-
-    START       = chr(128)
-    SENSORS     = chr(142)
-    STASIS      = chr(58)
-    DRIVEDIRECT = chr(145)
-    SAFE_MODE   = 2
+class Roomba:
 
     ser = serial.Serial("/dev/ttyAMA0",baudrate = 115200,timeout = 0.1)
+    ser.flushInput()
 
     def __init__(self):
         print("Roomba Init")
-        self._start()
-        self._driveDirect()
+        self.start()
+	self.safe()
         self.stop()
 
     # Drive Methods
 
+    def drive(self,vel,rad):
+        (vel_high, vel_low) = self.toHex(vel)
+        (radius_high, radius_low) = self.toHex(rad)
+        self._write( chr(137) )
+        self._write( chr(vel_high) )
+        self._write( chr(vel_low) )
+        self._write( chr(radius_high) )
+        self._write( chr(radius_low) )
+        return
+
     def forward(self):
-        (vel_high, vel_low) = self.toHex(50)
+	print("Forward...")
+        (vel_high, vel_low) = self.toHex(500)
         (radius_high, radius_low) = self.toHex(0)
         self._write( chr(137) )
         self._write( chr(vel_high) )
         self._write( chr(vel_low) )
         self._write( chr(radius_high) )
         self._write( chr(radius_low) )
-        #time.sleep(0.25)
         return
 
     def stop(self):
+	print("Stopped")
         (vel_high, vel_low) = self.toHex(0)
         (radius_high, radius_low) = self.toHex(0)
         self._write( chr(137) )
@@ -41,23 +47,21 @@ class Roomba(object):
         self._write( chr(vel_low) )
         self._write( chr(radius_high) )
         self._write( chr(radius_low) )
-        # time.sleep(0.25)
         return
 
     def turn(self):
-        self.stop()
+	print("Turning...")
         angle = -1
         self.drive(500,angle)
-        # 0.25 seconds = 90°
-        time.sleep(0.25 / 2)
-        self.stop()
+	# 0.54 = 90 deg
+	time.sleep(0.54 / 2)
         return
 
     # Sensor Methods
 
     def getStasis(self):
-        self._write( SENSORS )
-        self._write( STASIS )
+        self._write( chr(142) )
+        self._write( chr(58) )
         resp2 = self.ser.read(1)
         s = (int((resp2).encode('hex'), 16))
         #print ('stasis='+str(s))
@@ -65,19 +69,23 @@ class Roomba(object):
 
     # Mode Methods
 
-    def _driveDirect(self):
-        self.write( DRIVEDIRECT )
+    def driveDirect(self):
+	print("In drive direct mode")
+        self._write( chr(145) )
         time.sleep(0.25)
         return
     
-    def _start(self):
-        self._write( START )
+    def start(self):
+	print("Starting...")
+        self._write( chr(128) )
         # 20 ms between mode-changing commands
         time.sleep(0.25)
         return
     
-    def _safe(self):
-        self._write( SAFE )
+    def safe(self):
+	print("In safe mode")
+        self._write( chr(131) )
+        # 20 ms between mode-changing commands
         time.sleep(0.25)
         return
 

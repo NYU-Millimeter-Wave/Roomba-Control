@@ -4,7 +4,7 @@ import signal
 import sys
 import os
 import socket
-import Spin
+import ReadingCommands
 from SimpleWebSocketServer import SimpleWebSocketServer, WebSocket
 
 class SimpleHandler(WebSocket):
@@ -31,7 +31,7 @@ class SimpleHandler(WebSocket):
         if str(self.data) == "READNOW":
             print("Taking reading...")
             self.sendMessage(unicode('VREADNOW'))
-            Spin.spin()
+            ReadingCommands.spin()
             print("Done taking reading")
 
         if str(self.data) == "ENDEXP":

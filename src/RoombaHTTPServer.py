@@ -2,7 +2,7 @@
 # RoombaHTTPServer.py
 # Roomba-Control
 #
-# Aurélien Le Floc'h
+# Aurelien Le Floc'h
 #
 
 import os

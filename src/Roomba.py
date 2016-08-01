@@ -4,7 +4,6 @@ import time
 import math
 import serial
 from multiprocessing import Process
-from subprocess import Popen
 
 class Roomba:
 

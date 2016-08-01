@@ -13,11 +13,11 @@ class Roomba:
     def __init__(self):
         print("Roomba Init")
         self.start()
-	self.safe()
+        self.safe()
         self.stop()
         self.stasis = False
         print("Roomba is ready")
-        Process(target=watchStasis, args=(self)).start()
+        Process(target=self.watchStasis, args=(self)).start()
 
     def watchStasis(self):
         while True:
@@ -43,7 +43,7 @@ class Roomba:
         return
 
     def forward(self):
-	print("Forward...")
+        print("Forward...")
         (vel_high, vel_low) = self.toHex(500)
         (radius_high, radius_low) = self.toHex(0)
         self._write( chr(137) )
@@ -54,7 +54,7 @@ class Roomba:
         return
 
     def stop(self):
-	print("Stopped")
+        print("Stopped")
         (vel_high, vel_low) = self.toHex(0)
         (radius_high, radius_low) = self.toHex(0)
         self._write( chr(137) )
@@ -65,11 +65,11 @@ class Roomba:
         return
 
     def turn(self):
-	print("Turning...")
+        print("Turning...")
         angle = -1
         self.drive(500,angle)
-	# 0.54 = 90 deg
-	time.sleep(0.54 / 2)
+        # 0.54 = 90 deg
+        time.sleep(0.54 / 2)
         return
 
     # Sensor Methods
@@ -85,20 +85,20 @@ class Roomba:
     # Mode Methods
 
     def driveDirect(self):
-	print("In drive direct mode")
+        print("In drive direct mode")
         self._write( chr(145) )
         time.sleep(0.25)
         return
-    
+
     def start(self):
-	print("Starting...")
+        print("Starting...")
         self._write( chr(128) )
         # 20 ms between mode-changing commands
         time.sleep(0.25)
         return
-    
+
     def safe(self):
-	print("In safe mode")
+        print("In safe mode")
         self._write( chr(131) )
         # 20 ms between mode-changing commands
         time.sleep(0.25)

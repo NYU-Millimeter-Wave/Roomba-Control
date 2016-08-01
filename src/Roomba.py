@@ -17,7 +17,7 @@ class Roomba:
         self.stop()
         self.stasis = False
         print("Roomba is ready")
-        Process(target=self.watchStasis, args=(self)).start()
+        Process(target=self.watchStasis).start()
 
     def watchStasis(self):
         while True:

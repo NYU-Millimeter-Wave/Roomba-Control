@@ -3,7 +3,7 @@
 import time
 import math
 import serial
-import asyncio
+from multiprocessing import Process
 from subprocess import Popen
 
 class Roomba:
@@ -17,10 +17,9 @@ class Roomba:
 	self.safe()
         self.stop()
         self.stasis = False
-        self.watchStasis()
         print("Roomba is ready")
+        Process(target=watchStasis, args=(self)).start()
 
-    @asyncio.coroutine
     def watchStasis(self):
         while True:
             self.stasis = self.getStasis()

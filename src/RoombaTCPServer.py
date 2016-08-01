@@ -75,6 +75,15 @@ class SimpleHandler(WebSocket):
     def handleClose(self):
         print("Closed Connection: " + str(self.address))
 
+def signal_handler(self, signal, frame):
+    print("SIGINT received, exiting...")
+    self.server.close()
+    sys.exit(0)
+
+def get_ip_address(self):
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(("8.8.8.8", 80))
+    return s.getsockname()[0]
 
 if __name__ == '__main__':
     port = 9000

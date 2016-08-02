@@ -3,6 +3,7 @@
 import time
 import math
 import serial
+import signal
 from multiprocessing import Process
 
 class Roomba:
@@ -11,13 +12,24 @@ class Roomba:
     ser.flushInput()
 
     def __init__(self):
+
+        # Motor priming
         print("Roomba Init")
         self.start()
         self.safe()
         self.stop()
         self.stasis = False
+
+        # Spawn sensor listener
+        print("Spawning stasis listener loop...")
+        self.stasisLoop = Process(target=self.watchStasis).start()
+        print("Spawned with pid " + self.stasisLoop.pid)
+
+        # Init proc signal listener
+        signal.signal(signal.SIGINT, signal_handler)
+        signal.pause()
+
         print("Roomba is ready")
-        Process(target=self.watchStasis).start()
 
     def watchStasis(self):
         while True:
@@ -121,3 +133,8 @@ class Roomba:
             eqBitVal = (1<<16) + value
 
         return ( (eqBitVal >> 8) & 0xFF, eqBitVal & 0xFF )
+
+    def signal_handler(signal, frame):
+        print("SIGINT received, exiting...")
+        self.stasisLoop.terminate()
+        sys.exit(0)

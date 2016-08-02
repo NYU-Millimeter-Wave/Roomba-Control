@@ -1,9 +1,4 @@
-#
-# RoombaHTTPServer.py
-# Roomba-Control
-#
-# Aurelien Le Floc'h
-#
+#!/usr/bin/env/python
 
 import os
 import posixpath
@@ -227,7 +222,7 @@ class RoombaHTTPServer(BaseHTTPServer.BaseHTTPRequestHandler):
         })
 
 
-def test(HandlerClass = SimpleHTTPRequestHandler,
+def test(HandlerClass = RoombaHTTPServer,
          ServerClass = BaseHTTPServer.HTTPServer):
     BaseHTTPServer.test(HandlerClass, ServerClass)
 

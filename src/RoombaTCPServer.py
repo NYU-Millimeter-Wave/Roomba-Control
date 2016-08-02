@@ -87,7 +87,6 @@ def get_ip_address():
 
 if __name__ == '__main__':
     port = 9000
-    # ipaddr = socket.gethostbyname(socket.gethostname())
     ipaddr = get_ip_address()
     server = SimpleWebSocketServer(str(ipaddr), port, SimpleHandler)
     print("Serving TCP Socket on " + str(ipaddr) + ":" + str(port))

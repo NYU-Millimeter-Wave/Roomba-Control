@@ -90,4 +90,5 @@ ENV/
 
 # VIM
 *~
+*.swp
 *.sw*

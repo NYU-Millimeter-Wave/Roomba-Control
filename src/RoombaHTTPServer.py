@@ -9,6 +9,7 @@ import sys
 import shutil
 import mimetypes
 import json
+import signal
 try:
     from cStringIO import StringIO
 except ImportError:
@@ -34,7 +35,6 @@ class RoombaHTTPServer(BaseHTTPServer.BaseHTTPRequestHandler):
         if f:
             f.close()
 
-     # ESSAI
     def do_POST(self):
         """ Curl sample """
         """ curl -H "Content-Type: application/json" -X POST -d '{"username":"xyz","password":"abc"}' localhost:8000"""
@@ -227,5 +227,11 @@ def test(HandlerClass = RoombaHTTPServer,
     BaseHTTPServer.test(HandlerClass, ServerClass)
 
 
+def signal_handler(signal, frame):
+    print("HTTP: SIGINT received, exiting...")
+    sys.exit(0)
+
 if __name__ == '__main__':
     test()
+    signal.signal(signal.SIGINT, signal_handler)
+    signal.pause()

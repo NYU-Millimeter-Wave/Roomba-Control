@@ -12,7 +12,6 @@ class Roomba:
     ser.flushInput()
 
     def __init__(self):
-
         # Motor priming
         print("Roomba Init")
         self.start()
@@ -135,6 +134,6 @@ class Roomba:
         return ( (eqBitVal >> 8) & 0xFF, eqBitVal & 0xFF )
 
     def signal_handler(signal, frame):
-        print("SIGINT received, exiting...")
+        print("Roomba: SIGINT received, exiting...")
         self.stasisLoop.terminate()
         sys.exit(0)

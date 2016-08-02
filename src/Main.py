@@ -8,7 +8,7 @@ from Roomba import Roomba
 global roomba
 
 def signal_handler(signal, frame):
-    print("SIGINT received, exiting...")
+    print("Main: SIGINT received, exiting...")
     sys.exit(0)
 
 if __name__ == '__main__':

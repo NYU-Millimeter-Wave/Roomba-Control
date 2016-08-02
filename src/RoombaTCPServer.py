@@ -1,9 +1,9 @@
 #!/usr/bin/env/python
 
-import signal
 import sys
 import os
 import socket
+import signal
 import ReadingCommands
 from Roomba import Roomba
 from SimpleWebSocketServer import SimpleWebSocketServer, WebSocket
@@ -76,7 +76,7 @@ class SimpleHandler(WebSocket):
         print("Closed Connection: " + str(self.address))
 
 def signal_handler(signal, frame):
-    print("SIGINT received, exiting...")
+    print("TCP: SIGINT received, exiting...")
     self.server.close()
     sys.exit(0)
 

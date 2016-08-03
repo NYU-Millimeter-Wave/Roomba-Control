@@ -7,15 +7,17 @@ import signal
 from Roomba import Roomba
 
 global roomba
+global tcpProc 
+global httpProc
 
 def signal_handler(signal, frame):
-    print("Main: SIGINT received, exiting...")
+    print("\nMain: SIGINT received, exiting...")
     teardown()
 
 def teardown():
     roomba.term()
-    proc.terminate()
-    proc2.terminate()
+    tcpProc.terminate()
+    httpProc.terminate()
     sys.exit(0)
 
 if __name__ == '__main__':
@@ -25,8 +27,8 @@ if __name__ == '__main__':
 
     print("Creating child processes...")
 
-    proc  = subprocess.Popen(['python src/RoombaTCPServer.py'], shell=True)
-    proc2 = subprocess.Popen(['python src/RoombaHTTPServer.py'], shell=True)
+    tcpProc  = subprocess.Popen(['python src/RoombaTCPServer.py'], shell=True)
+    httpProc = subprocess.Popen(['python src/RoombaHTTPServer.py'], shell=True)
 
     print("TCP server spawned with pid " + str(proc.pid))
     print("HTTP server spawned with pid " + str(proc2.pid))

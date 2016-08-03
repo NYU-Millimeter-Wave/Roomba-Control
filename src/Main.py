@@ -30,8 +30,8 @@ if __name__ == '__main__':
     tcpProc  = subprocess.Popen(['python src/RoombaTCPServer.py'], shell=True)
     httpProc = subprocess.Popen(['python src/RoombaHTTPServer.py'], shell=True)
 
-    print("TCP server spawned with pid " + str(proc.pid))
-    print("HTTP server spawned with pid " + str(proc2.pid))
+    print("TCP server spawned with pid " + str(tcpProc.pid))
+    print("HTTP server spawned with pid " + str(httpProc.pid))
 
     # Init proc signal listener
     signal.signal(signal.SIGINT, signal_handler)

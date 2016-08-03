@@ -39,12 +39,12 @@ class RoombaHTTPServer(BaseHTTPServer.BaseHTTPRequestHandler):
         """ Curl sample """
         """ curl -H "Content-Type: application/json" -X POST -d '{"username":"xyz","password":"abc"}' localhost:8000"""
         print "in post method 2"
-        
+
 
         line = self.rfile.read(int(self.headers['Content-Length']))
         self.send_response(200)
         self.end_headers()
-        
+
         json_string = line
         parsed_json = json.loads(json_string)
 
@@ -135,7 +135,7 @@ class RoombaHTTPServer(BaseHTTPServer.BaseHTTPRequestHandler):
                 # Note: a link to a directory displays with @ and links with /
             f.write('<li><a href="%s">%s</a>\n'
                     % (urllib.quote(linkname), cgi.escape(displayname)))
-        f.write("</ul>\n<hr>\n</body>\n</html>\n")
+            f.write("</ul>\n<hr>\n</body>\n</html>\n")
         length = f.tell()
         f.seek(0)
         self.send_response(200)
@@ -222,9 +222,9 @@ class RoombaHTTPServer(BaseHTTPServer.BaseHTTPRequestHandler):
         })
 
 
-def test(HandlerClass = RoombaHTTPServer,
-         ServerClass = BaseHTTPServer.HTTPServer):
-    BaseHTTPServer.test(HandlerClass, ServerClass)
+    def test(HandlerClass = RoombaHTTPServer,
+            ServerClass = BaseHTTPServer.HTTPServer):
+        BaseHTTPServer.test(HandlerClass, ServerClass)
 
 
 def signal_handler(signal, frame):
@@ -234,5 +234,5 @@ def signal_handler(signal, frame):
 
 if __name__ == '__main__':
     test()
-    signal.signal(signal.SIGINT, signal_handler)
+    signal.signal(signal.SIGTERM, signal_handler)
     signal.pause()

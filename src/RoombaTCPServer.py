@@ -92,6 +92,6 @@ if __name__ == '__main__':
     server = SimpleWebSocketServer(str(ipaddr), port, SimpleHandler)
     print("Serving TCP Socket on " + str(ipaddr) + ":" + str(port))
 
-    signal.signal(signal.SIGTERM, signal_handler)
     server.serveforever()
+    signal.signal(signal.SIGTERM, signal_handler)
     signal.pause()

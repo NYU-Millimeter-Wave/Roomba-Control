@@ -15,9 +15,9 @@ def signal_handler(signal, frame):
     teardown()
 
 def teardown():
-    roomba.term()
     tcpProc.terminate()
     httpProc.terminate()
+    roomba.term()
     sys.exit(0)
 
 if __name__ == '__main__':

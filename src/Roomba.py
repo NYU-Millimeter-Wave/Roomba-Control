@@ -23,7 +23,7 @@ class Roomba:
         print("Spawning bump listener loop...")
         self.bumpLoop = Process(target=self.watchBump)
         self.bumpLoop.start()
-        print("Spawned with pid " + self.bumpLoop.pid)
+        print("Spawned with pid " + str(self.bumpLoop.pid))
 
         print("Roomba is ready")
 
@@ -171,7 +171,7 @@ class Roomba:
 
     def term(self):
         print("Roomba: SIGINT received, exiting...")
-        self.bumpLoop.terminate()
+        os.kill(self.bumpLoop.pid, signal.SIGTERM)
         self.stop()
         self.safe()
         self.ser.flushInput()

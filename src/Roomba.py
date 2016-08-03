@@ -118,8 +118,8 @@ class Roomba:
         maskRight = 0x38 # 00 111 000
         maskLeft  = 0x7  # 00 000 111
 
-        respRight = resp & maskRight
-        respLeft  = resp & maskLeft
+        respRight = int(resp) & maskRight
+        respLeft  = int(resp) & maskLeft
 
         if respRight != 0 :
             self.bumpRight = True

@@ -112,14 +112,15 @@ class Roomba:
         self._write( chr(142) )
         self._write( chr(7) )
         resp = self.ser.read(1)
-        print(resp)
+        respHex = int(resp.encode('hex'), 16)
+        print(respHex)
 
         # Bit Masking      NA RGT LFT
         maskRight = 0x38 # 00 111 000
         maskLeft  = 0x7  # 00 000 111
 
-        respRight = int(resp) & maskRight
-        respLeft  = int(resp) & maskLeft
+        respRight = respHex & maskRight
+        respLeft  = respHex & maskLeft
 
         if respRight != 0 :
             self.bumpRight = True

@@ -35,13 +35,13 @@ class Roomba:
         while True:
             self.getBumps()
             time.sleep(0.20)
-            if self.bumpRight = True:
+            if self.bumpRight == True:
                 print("Bumped Right")
                 self.drive(-500, 0)
                 time.sleep(0.5)
                 self.turn()
                 self.forward()
-            elif self.bumpLeft = True:
+            elif self.bumpLeft == True:
                 print("Bumped Left")
                 self.drive(-500, 0)
                 time.sleep(0.5)

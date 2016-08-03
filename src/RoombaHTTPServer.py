@@ -229,6 +229,7 @@ def test(HandlerClass = RoombaHTTPServer,
 
 def signal_handler(signal, frame):
     print("HTTP: SIGINT received, exiting...")
+    ServerClass.close()
     sys.exit(0)
 
 if __name__ == '__main__':

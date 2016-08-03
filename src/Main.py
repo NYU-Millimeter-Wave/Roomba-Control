@@ -4,12 +4,16 @@ import os
 import sys
 import subprocess
 import signal
-# from Roomba import Roomba
+from Roomba import Roomba
 
 global roomba
 
 def signal_handler(signal, frame):
     print("Main: SIGINT received, exiting...")
+    teardown()
+
+def teardown():
+    roomba.term()
     proc.terminate()
     proc2.terminate()
     sys.exit(0)
@@ -17,7 +21,7 @@ def signal_handler(signal, frame):
 if __name__ == '__main__':
 
     # Initialize Roomba control object
-    # roomba = Roomba()
+    roomba = Roomba()
 
     print("Creating child processes...")
 

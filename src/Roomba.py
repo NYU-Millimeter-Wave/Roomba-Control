@@ -23,7 +23,7 @@ class Roomba:
         # Spawn sensor listener
         print("Spawning bump listener loop...")
         self.bumpLoop = Process(target=self.watchBump).start()
-        print("Spawned with pid " + self.bumpLoop.pid)
+        # print("Spawned with pid " + self.bumpLoop.pid)
 
         # Init proc signal listener
         signal.signal(signal.SIGINT, signal_handler)
@@ -36,11 +36,13 @@ class Roomba:
             self.getBumps()
             time.sleep(0.20)
             if self.bumpRight = True:
+                print("Bumped Right")
                 self.drive(-500, 0)
                 time.sleep(0.5)
                 self.turn()
                 self.forward()
             elif self.bumpLeft = True:
+                print("Bumped Left")
                 self.drive(-500, 0)
                 time.sleep(0.5)
                 self.turnLeft()
@@ -169,7 +171,12 @@ class Roomba:
 
         return ( (eqBitVal >> 8) & 0xFF, eqBitVal & 0xFF )
 
-    def signal_handler(signal, frame):
+    # Teardown Function
+
+    def term(self):
         print("Roomba: SIGINT received, exiting...")
-        self.stasisLoop.terminate()
-        sys.exit(0)
+        self.bumpLoop.terminate()
+        self.stop()
+        self.safe()
+        self.ser.flushInput()
+        self.ser.close()

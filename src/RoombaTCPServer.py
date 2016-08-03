@@ -42,6 +42,7 @@ class SimpleHandler(WebSocket):
 
     def handleMessage(self):
         print("Message Received: " + str(self.data))
+
         if str(self.data) == "SHUTDOWN":
             print("Shutdown signal received, exiting...")
             self.close()
@@ -79,7 +80,6 @@ class SimpleHandler(WebSocket):
 def signal_handler(signal, frame):
     print("TCP: SIGINT received, exiting...")
     server.close()
-    sys.exit(0)
 
 def get_ip_address():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)

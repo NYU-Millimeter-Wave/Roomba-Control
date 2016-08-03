@@ -1,5 +1,7 @@
 #!/usr/bin/env/python
 
+import os
+import signal
 import time
 import math
 import serial

@@ -222,10 +222,9 @@ class RoombaHTTPServer(BaseHTTPServer.BaseHTTPRequestHandler):
         })
 
 
-    def test(HandlerClass = RoombaHTTPServer,
-            ServerClass = BaseHTTPServer.HTTPServer):
-        BaseHTTPServer.test(HandlerClass, ServerClass)
-
+def test(HandlerClass = RoombaHTTPServer,
+        ServerClass = BaseHTTPServer.HTTPServer):
+    BaseHTTPServer.test(HandlerClass, ServerClass)
 
 def signal_handler(signal, frame):
     print("HTTP: SIGINT received, exiting...")

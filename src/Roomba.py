@@ -17,12 +17,13 @@ class Roomba:
         self.start()
         self.safe()
         self.stop()
-        self.stasis = False
+        self.bumpLeft = False
+        self.bumpRight = False
 
         # Spawn sensor listener
-        print("Spawning stasis listener loop...")
-        self.stasisLoop = Process(target=self.watchStasis).start()
-        print("Spawned with pid " + self.stasisLoop.pid)
+        print("Spawning bump listener loop...")
+        self.bumpLoop = Process(target=self.watchBump).start()
+        print("Spawned with pid " + self.bumpLoop.pid)
 
         # Init proc signal listener
         signal.signal(signal.SIGINT, signal_handler)
@@ -30,15 +31,19 @@ class Roomba:
 
         print("Roomba is ready")
 
-    def watchStasis(self):
+    def watchBump(self):
         while True:
-            self.stasis = self.getStasis()
-            print("Current Stasis:" + self.stasis)
+            self.getBumps()
             time.sleep(0.20)
-            if self.stasis == 0:
+            if self.bumpRight = True:
                 self.drive(-500, 0)
                 time.sleep(0.5)
                 self.turn()
+                self.forward()
+            elif self.bumpLeft = True:
+                self.drive(-500, 0)
+                time.sleep(0.5)
+                self.turnLeft()
                 self.forward()
 
     # Drive Methods
@@ -83,6 +88,14 @@ class Roomba:
         time.sleep(0.54 / 2)
         return
 
+    def turnLeft(self):
+        print("Turning Left...")
+        angle = 1
+        self.drive(500,angle)
+        # 0.54 = 90 deg
+        time.sleep(0.54 / 2)
+        return
+
     # Sensor Methods
 
     def getStasis(self):
@@ -92,6 +105,29 @@ class Roomba:
         s = (int((resp2).encode('hex'), 16))
         #print ('stasis='+str(s))
         return s
+
+    def getBumps(self):
+        self._write( chr(142) )
+        self._write( chr(58) )
+        resp = self.ser.read(1)
+        print(resp)
+
+        # Bit Masking      NA RGT LFT
+        maskRight = 0x38 # 00 111 000
+        maskLeft  = 0x7  # 00 000 111
+
+        respRight = resp & maskRight
+        respLeft  = resp & maskLeft
+
+        if respRight != 0 :
+            self.bumpRight = True
+        else:
+            self.bumpRight = False
+        if respLeft != 0 :
+            self.bumpLeft = True
+        else:
+            self.bumpLeft = False
+        return
 
     # Mode Methods
 

@@ -1,28 +1,31 @@
 #!/usr/bin/env/python
 
 import os
+import sys
 import subprocess
 import signal
-from Roomba import Roomba
+# from Roomba import Roomba
 
 global roomba
 
 def signal_handler(signal, frame):
     print("Main: SIGINT received, exiting...")
+    proc.terminate()
+    proc2.terminate()
     sys.exit(0)
 
 if __name__ == '__main__':
 
     # Initialize Roomba control object
-    roomba = Roomba()
+    # roomba = Roomba()
 
     print("Creating child processes...")
 
-    proc  = subprocess.Popen(['sudo', 'python', 'src/RoombaTCPServer.py'], shell=True)
-    proc2 = subprocess.Popen(['sudo', 'python', 'src/RoombaHTTPServer.py'], shell=True)
+    proc  = subprocess.Popen(['python src/RoombaTCPServer.py'], shell=True)
+    proc2 = subprocess.Popen(['python src/RoombaHTTPServer.py'], shell=True)
 
-    print("TCP server spawned with pid " + proc.pid)
-    print("HTTP server spawned with pid " + proc2.pid)
+    print("TCP server spawned with pid " + str(proc.pid))
+    print("HTTP server spawned with pid " + str(proc2.pid))
 
     # Init proc signal listener
     signal.signal(signal.SIGINT, signal_handler)

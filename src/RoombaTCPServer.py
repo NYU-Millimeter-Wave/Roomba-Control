@@ -37,7 +37,7 @@ from SimpleWebSocketServer import SimpleWebSocketServer, WebSocket
 
     # def closeServer(self):
         # self.server.close()
-        
+
 class SimpleHandler(WebSocket):
 
     def handleMessage(self):
@@ -67,6 +67,7 @@ class SimpleHandler(WebSocket):
 
         if str(self.data) == "ENDEXP":
             print("Signalled End of experiment")
+            self.sendMessage(unicode('VENDEXP'))
             # RUN CLEAN UP SCRIPTS
 
     def handleConnected(self):
@@ -77,7 +78,7 @@ class SimpleHandler(WebSocket):
 
 def signal_handler(signal, frame):
     print("TCP: SIGINT received, exiting...")
-    self.server.close()
+    server.close()
     sys.exit(0)
 
 def get_ip_address():

@@ -7,7 +7,7 @@ import signal
 from Roomba import Roomba
 
 global roomba
-global tcpProc 
+global tcpProc
 global httpProc
 
 def signal_handler(signal, frame):

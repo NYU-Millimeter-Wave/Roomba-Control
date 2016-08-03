@@ -21,8 +21,9 @@ class Roomba:
 
         # Spawn sensor listener
         print("Spawning bump listener loop...")
-        self.bumpLoop = Process(target=self.watchBump).start()
-        # print("Spawned with pid " + self.bumpLoop.pid)
+        self.bumpLoop = Process(target=self.watchBump)
+        self.bumpLoop.start()
+        print("Spawned with pid " + self.bumpLoop.pid)
 
         print("Roomba is ready")
 
@@ -32,13 +33,13 @@ class Roomba:
             time.sleep(0.20)
             if self.bumpRight == True:
                 print("Bumped Right")
-                self.drive(-500, 0)
+                self.drive(-300, 0)
                 time.sleep(0.5)
                 self.turn()
                 self.forward()
             elif self.bumpLeft == True:
                 print("Bumped Left")
-                self.drive(-500, 0)
+                self.drive(-300, 0)
                 time.sleep(0.5)
                 self.turnLeft()
                 self.forward()
@@ -57,7 +58,7 @@ class Roomba:
 
     def forward(self):
         print("Forward...")
-        (vel_high, vel_low) = self.toHex(500)
+        (vel_high, vel_low) = self.toHex(300)
         (radius_high, radius_low) = self.toHex(0)
         self._write( chr(137) )
         self._write( chr(vel_high) )

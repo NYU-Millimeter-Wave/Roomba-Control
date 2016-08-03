@@ -3,7 +3,6 @@
 import time
 import math
 import serial
-import signal
 from multiprocessing import Process
 
 class Roomba:
@@ -24,10 +23,6 @@ class Roomba:
         print("Spawning bump listener loop...")
         self.bumpLoop = Process(target=self.watchBump).start()
         # print("Spawned with pid " + self.bumpLoop.pid)
-
-        # Init proc signal listener
-        signal.signal(signal.SIGINT, signal_handler)
-        signal.pause()
 
         print("Roomba is ready")
 
@@ -113,7 +108,6 @@ class Roomba:
         self._write( chr(7) )
         resp = self.ser.read(1)
         respHex = int(resp.encode('hex'), 16)
-        print(respHex)
 
         # Bit Masking      NA RGT LFT
         maskRight = 0x38 # 00 111 000

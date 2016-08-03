@@ -110,7 +110,7 @@ class Roomba:
 
     def getBumps(self):
         self._write( chr(142) )
-        self._write( chr(58) )
+        self._write( chr(7) )
         resp = self.ser.read(1)
         print(resp)
 

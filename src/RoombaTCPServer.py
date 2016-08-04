@@ -37,11 +37,13 @@ class SimpleHandler(WebSocket):
             self.sendMessage(unicode('VREADNOW'))
             ReadingCommands.spin()
             print("Done taking reading")
+            roomba.forward()
 
         if str(self.data) == "ENDEXP":
             print("Signalled End of experiment")
             self.sendMessage(unicode('VENDEXP'))
             # RUN CLEAN UP SCRIPTS
+            roomba.term()
 
     def handleConnected(self):
         print("New Connection: " + str(self.address))

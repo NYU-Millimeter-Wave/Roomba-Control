@@ -6,7 +6,6 @@ import subprocess
 import signal
 from Roomba import Roomba
 
-global roomba
 global tcpProc
 global httpProc
 
@@ -17,14 +16,11 @@ def signal_handler(signal, frame):
 def teardown():
     tcpProc.terminate()
     httpProc.terminate()
-    roomba.term()
     sys.exit(0)
 
 if __name__ == '__main__':
 
     # Initialize Roomba control object
-    roomba = Roomba()
-
     print("Creating child processes...")
 
     tcpProc  = subprocess.Popen(['python src/RoombaTCPServer.py'], shell=True)

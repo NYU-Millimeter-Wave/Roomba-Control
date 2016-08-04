@@ -8,35 +8,7 @@ import ReadingCommands
 from Roomba import Roomba
 from SimpleWebSocketServer import SimpleWebSocketServer, WebSocket
 
-# class RoombaTCPServer():
-
-    # def __init__(self):
-        # port = 9000
-        # ipaddr = get_ip_address()
-
-        # self.server = SimpleWebSocketServer(str(ipaddr), port, SimpleHandler)
-        # print("Serving TCP Socket on " + str(ipaddr) + ":" + str(port))
-
-        # self.signal.signal(signal.SIGINT, signal_handler)
-        # server.serveforever()
-        # signal.pause()
-
-    # def signal_handler(self, signal, frame):
-        # print("SIGINT received, exiting...")
-        # self.server.close()
-        # sys.exit(0)
-
-    # def get_ip_address(self):
-        # s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        # s.connect(("8.8.8.8", 80))
-        # return s.getsockname()[0]
-
-    # def openServer(self):
-        # self.server = SimpleWebSocketServer(str(ipaddr), port, SimpleHandler)
-        # print("Serving TCP Socket on " + str(ipaddr) + ":" + str(port))
-
-    # def closeServer(self):
-        # self.server.close()
+global roomba
 
 class SimpleHandler(WebSocket):
 
@@ -79,6 +51,7 @@ class SimpleHandler(WebSocket):
 
 def signal_handler(signal, frame):
     print("TCP: SIGINT received, exiting...")
+    roomba.term()
     sys.exit(0)
 
 def get_ip_address():
@@ -89,6 +62,7 @@ def get_ip_address():
 if __name__ == '__main__':
     port = 9000
     ipaddr = get_ip_address()
+    roomba = Roomba()
     server = SimpleWebSocketServer(str(ipaddr), port, SimpleHandler)
     print("Serving TCP Socket on " + str(ipaddr) + ":" + str(port))
 

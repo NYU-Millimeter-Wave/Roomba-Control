@@ -60,7 +60,7 @@ class Roomba:
 
     def forward(self):
         print("Forward...")
-        (vel_high, vel_low) = self.toHex(300)
+        (vel_high, vel_low) = self.toHex(200)
         (radius_high, radius_low) = self.toHex(0)
         self._write( chr(137) )
         self._write( chr(vel_high) )

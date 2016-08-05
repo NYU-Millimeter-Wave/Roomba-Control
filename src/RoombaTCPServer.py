@@ -21,7 +21,7 @@ class SimpleHandler(WebSocket):
             roomba.term()
             self.close()
             sys.exit(0)
-        
+
         # Moves the Roomba forward
         if str(self.data) == "START":
             print("Signalled to begin")
@@ -77,3 +77,4 @@ if __name__ == '__main__':
 
     signal.signal(signal.SIGTERM, signal_handler)
     signal.pause()
+

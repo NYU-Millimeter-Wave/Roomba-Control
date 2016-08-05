@@ -221,17 +221,29 @@ class RoombaHTTPServer(BaseHTTPServer.BaseHTTPRequestHandler):
         '.h': 'text/plain',
         })
 
+runSignal = True
 
-def test(HandlerClass = RoombaHTTPServer,
-        ServerClass = BaseHTTPServer.HTTPServer):
-    BaseHTTPServer.test(HandlerClass, ServerClass)
+def get_ip_address():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(("8.8.8.8", 80))
+    return s.getsockname()[0]
+
+def runWhileTrue(handler_class = RoombaHTTPServer,
+                 server_class = BaseHTTPServer.HTTPServer):
+    # BaseHTTPServer.test(HandlerClass, ServerClass)
+    server_addr = (get_ip_address(), 8000)
+    htttpd = server_class(server_addr, handler_class)
+    while runSignal:
+        htttpd.handle_request()
 
 def signal_handler(signal, frame):
     print("HTTP: SIGINT received, exiting...")
-    ServerClass.close()
+    runSignal = False
+    server_class.close()
     sys.exit(0)
 
 if __name__ == '__main__':
-    test()
+    runWhileTrue()
     signal.signal(signal.SIGTERM, signal_handler)
     signal.pause()
+

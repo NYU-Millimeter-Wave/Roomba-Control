@@ -11,6 +11,8 @@ class Roomba:
 
     ser = serial.Serial("/dev/ttyAMA0",baudrate = 115200,timeout = 0.1)
     ser.flushInput()
+    
+    SPEED = 200 
 
     def __init__(self):
         # Motor priming
@@ -58,15 +60,38 @@ class Roomba:
         self._write( chr(radius_low) )
         return
 
+    # def forward(self):
+        # print("Forward...")
+        # (vel_high, vel_low) = self.toHex(200)
+        # (radius_high, radius_low) = self.toHex(0)
+        # self._write( chr(137) )
+        # self._write( chr(vel_high) )
+        # self._write( chr(vel_low) )
+        # self._write( chr(radius_high) )
+        # self._write( chr(radius_low) )
+        # return
+
     def forward(self):
         print("Forward...")
-        (vel_high, vel_low) = self.toHex(200)
-        (radius_high, radius_low) = self.toHex(0)
-        self._write( chr(137) )
-        self._write( chr(vel_high) )
-        self._write( chr(vel_low) )
-        self._write( chr(radius_high) )
-        self._write( chr(radius_low) )
+        self.drive(SPEED, 0)
+
+    def backward(self):
+        print("Backward...")
+        self.drive((SPEED * -1), 0)
+
+    def taperStop(self):
+        currSpeed = SPEED
+        while currSpeed > 0:
+            (vel_high, vel_low) = self.toHex(currSpeed)
+            (radius_high, radius_low) = self.toHex(currSpeed)
+            self._write( chr(137) )
+            self._write( chr(vel_high) )
+            self._write( chr(vel_low) )
+            self._write( chr(radius_high) )
+            self._write( chr(radius_low) )
+            currSpeed -= 1
+        self.stop()
+        print("Stopped")
         return
 
     def stop(self):

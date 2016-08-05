@@ -11,8 +11,8 @@ class Roomba:
 
     ser = serial.Serial("/dev/ttyAMA0",baudrate = 115200,timeout = 0.1)
     ser.flushInput()
-    
-    SPEED = 200 
+
+    SPEED = 200
 
     def __init__(self):
         # Motor priming
@@ -34,16 +34,16 @@ class Roomba:
     def watchBump(self):
         while True:
             self.getBumps()
-            time.sleep(0.20)
+            time.sleep(0.15)
             if self.bumpRight == True:
                 print("Bumped Right")
-                self.drive(-300, 0)
+                self.backward()
                 time.sleep(0.5)
                 self.turn()
                 self.forward()
             elif self.bumpLeft == True:
                 print("Bumped Left")
-                self.drive(-300, 0)
+                self.backward()
                 time.sleep(0.5)
                 self.turnLeft()
                 self.forward()
@@ -108,17 +108,17 @@ class Roomba:
     def turn(self):
         print("Turning...")
         angle = -1
-        self.drive(500,angle)
+        self.drive(SPEED,angle)
         # 0.54 = 90 deg
-        time.sleep(0.54 / 2)
+        time.sleep(0.54)
         return
 
     def turnLeft(self):
         print("Turning Left...")
         angle = 1
-        self.drive(500,angle)
+        self.drive(SPEED,angle)
         # 0.54 = 90 deg
-        time.sleep(0.54 / 2)
+        time.sleep(0.54)
         return
 
     # Sensor Methods
@@ -203,3 +203,4 @@ class Roomba:
         self.safe()
         self.ser.flushInput()
         self.ser.close()
+

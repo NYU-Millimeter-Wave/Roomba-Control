@@ -11,9 +11,6 @@ global httpProc
 
 def signal_handler(signal, frame):
     print("\nMain: SIGINT received, exiting...")
-    teardown()
-
-def teardown():
     tcpProc.terminate()
     httpProc.terminate()
     sys.exit(0)
@@ -32,10 +29,4 @@ if __name__ == '__main__':
     # Init proc signal listener
     signal.signal(signal.SIGINT, signal_handler)
     signal.pause()
-
-    # # Spawn TCP Process
-    # os.system("sudo python src/RoombaTCPServer.py &")
-
-    # # Spawn HTTP Process
-    # os.system("sudo python src/RoombaHTTPServer.py &")
 

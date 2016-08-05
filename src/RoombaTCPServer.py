@@ -15,23 +15,27 @@ class SimpleHandler(WebSocket):
     def handleMessage(self):
         print("Message Received: " + str(self.data))
 
+        # Shuts down the server and the Roomba proc
         if str(self.data) == "SHUTDOWN":
             print("Shutdown signal received, exiting...")
+            roomba.term()
             self.close()
             sys.exit(0)
-
+        
+        # Moves the Roomba forward
         if str(self.data) == "START":
             print("Signalled to begin")
             self.sendMessage(unicode('VSTART'))
             roomba.forward()
 
+        # Halts the Roomba movement to take reading
         if str(self.data) == "READING":
             print("Signalled to read, stopping movement")
             self.sendMessage(unicode('VREADING'))
-            # STOP ROVER MOVEMENT
             roomba.stop()
             print("Movement halted")
 
+        # Signals the motor to spin the iPhone
         if str(self.data) == "READNOW":
             print("Taking reading...")
             self.sendMessage(unicode('VREADNOW'))
@@ -39,10 +43,10 @@ class SimpleHandler(WebSocket):
             print("Done taking reading")
             roomba.forward()
 
+        # Perform clean-up operations at end of experiment
         if str(self.data) == "ENDEXP":
             print("Signalled End of experiment")
             self.sendMessage(unicode('VENDEXP'))
-            # RUN CLEAN UP SCRIPTS
             roomba.term()
 
     def handleConnected(self):
@@ -64,10 +68,12 @@ def get_ip_address():
 if __name__ == '__main__':
     port = 9000
     ipaddr = get_ip_address()
+
     roomba = Roomba()
+
     server = SimpleWebSocketServer(str(ipaddr), port, SimpleHandler)
+    server.serveforever()
     print("Serving TCP Socket on " + str(ipaddr) + ":" + str(port))
 
-    server.serveforever()
     signal.signal(signal.SIGTERM, signal_handler)
     signal.pause()

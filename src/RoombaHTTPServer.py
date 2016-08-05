@@ -10,6 +10,8 @@ import shutil
 import mimetypes
 import json
 import signal
+import socket
+
 try:
     from cStringIO import StringIO
 except ImportError:
@@ -17,8 +19,9 @@ except ImportError:
 
 class RoombaHTTPServer(BaseHTTPServer.BaseHTTPRequestHandler):
 
-    def __init__(self):
-        pass
+    # def __init__(self):
+        # pass
+        # super(RoombaHTTPServer, self).__init__()
 
     def do_GET(self):
         # Serve a GET request
@@ -233,6 +236,8 @@ def runWhileTrue(handler_class = RoombaHTTPServer,
     # BaseHTTPServer.test(HandlerClass, ServerClass)
     server_addr = (get_ip_address(), 8000)
     htttpd = server_class(server_addr, handler_class)
+    # htttpd.serve_forever()
+    print("Serving HTTP on " + str(server_addr))
     while runSignal:
         htttpd.handle_request()
 

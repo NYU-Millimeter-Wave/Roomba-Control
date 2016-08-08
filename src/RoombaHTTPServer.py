@@ -19,12 +19,9 @@ except ImportError:
 
 class RoombaHTTPServer(BaseHTTPServer.BaseHTTPRequestHandler):
 
-    # def __init__(self):
-        # pass
-        # super(RoombaHTTPServer, self).__init__()
-
     def do_GET(self):
         # Serve a GET request
+        print("GET req recieved")
         f = self.send_head()
         if f:
             try:
@@ -41,7 +38,8 @@ class RoombaHTTPServer(BaseHTTPServer.BaseHTTPRequestHandler):
     def do_POST(self):
         """ Curl sample """
         """ curl -H "Content-Type: application/json" -X POST -d '{"username":"xyz","password":"abc"}' localhost:8000"""
-        print "in post method 2"
+
+        print("POST req recieved")
 
 
         line = self.rfile.read(int(self.headers['Content-Length']))

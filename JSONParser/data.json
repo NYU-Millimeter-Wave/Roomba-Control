@@ -2,9 +2,8 @@
 	"experiments": [
 		{
 			"title": "Experiemnt 1",
-			"timeDelta": 0,
-			"experimentStartTime": 0,
-			"experimentEndTime": 0,
+			"startTime": 0,
+			"endTime": 0,
 			"readings": [
 				{
 					"timestamp": 0,
@@ -30,10 +29,9 @@
 			]
 		},
 		{
-			"title": "Experiemnt 1",
-			"timeDelta": 0,
-			"experimentStartTime": 0,
-			"experimentEndTime": 0,
+			"title": "Experiemnt 2",
+			"startTime": 0,
+			"endTime": 0,
 			"readings": [
 				{
 					"timestamp": 0,

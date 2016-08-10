@@ -11,7 +11,7 @@ def spin():
     gpio.setup(18, gpio.OUT)
 
     # EasyDriver init           Speed
-    stepper = ed.easydriver(18, 0.001, 23, 24, 17, 25)
+    stepper = ed.easydriver(18, 0.005, 23, 24, 17, 25)
 
     # Spin Once
     count = 0

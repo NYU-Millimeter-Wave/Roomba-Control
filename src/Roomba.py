@@ -73,14 +73,14 @@ class Roomba:
 
     def forward(self):
         print("Forward...")
-        self.drive(SPEED, 0)
+        self.drive(self.SPEED, 0)
 
     def backward(self):
         print("Backward...")
-        self.drive((SPEED * -1), 0)
+        self.drive((self.SPEED * -1), 0)
 
     def taperStop(self):
-        currSpeed = SPEED
+        currSpeed = self.SPEED
         while currSpeed > 0:
             (vel_high, vel_low) = self.toHex(currSpeed)
             (radius_high, radius_low) = self.toHex(currSpeed)
@@ -108,7 +108,7 @@ class Roomba:
     def turn(self):
         print("Turning...")
         angle = -1
-        self.drive(SPEED,angle)
+        self.drive(self.SPEED,angle)
         # 0.54 = 90 deg
         time.sleep(0.54)
         return
@@ -116,7 +116,7 @@ class Roomba:
     def turnLeft(self):
         print("Turning Left...")
         angle = 1
-        self.drive(SPEED,angle)
+        self.drive(self.SPEED,angle)
         # 0.54 = 90 deg
         time.sleep(0.54)
         return

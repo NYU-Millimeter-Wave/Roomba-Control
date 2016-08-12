@@ -21,13 +21,26 @@ class RoombaHTTPServer(BaseHTTPServer.BaseHTTPRequestHandler):
 
     def do_GET(self):
         # Serve a GET request
-        print("GET req recieved")
-        f = self.send_head()
-        if f:
-            try:
-                self.copyfile(f, self.wfile)
-            finally:
-                f.close()
+        print("GET recieved")
+        self.send_response(200)
+        self.send_header("Content-type", "application/json")
+        self.end_headers()
+
+        # Open the resultset and send it over
+        resultset = open("resultset.json", 'r')
+        jsonString = resultset.read()
+        self.wfile.write(jsonString)
+        resultset.close()
+
+    # def do_GET(self):
+        # # Serve a GET request
+        # print("GET req recieved")
+        # f = self.send_head()
+        # if f:
+            # try:
+                # self.copyfile(f, self.wfile)
+            # finally:
+                # f.close()
 
     def do_HEAD(self):
         # Serve a HEAD request

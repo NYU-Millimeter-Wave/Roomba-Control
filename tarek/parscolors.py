@@ -102,6 +102,10 @@ def dessin(tab_dist,lights):
 
         turtle.mainloop()
 
+func convertEPS(epsFilePath):
+    os.system("convert " + str(epsFilePath) + " output.png")
+    return base64.b64encode(open("output.png", "rb").read())
+    
 
 dist,coul = pars()
 dessin(dist,coul)

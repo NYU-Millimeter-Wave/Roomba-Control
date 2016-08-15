@@ -72,8 +72,8 @@ if __name__ == '__main__':
     roomba = Roomba()
 
     server = SimpleWebSocketServer(str(ipaddr), port, SimpleHandler)
-    server.serveforever()
     print("Serving TCP Socket on " + str(ipaddr) + ":" + str(port))
+    server.serveforever()
 
     signal.signal(signal.SIGTERM, signal_handler)
     signal.pause()

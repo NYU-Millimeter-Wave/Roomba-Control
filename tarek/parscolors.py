@@ -17,6 +17,7 @@ Light3Detected="purple"
 
 
 def pars(): 
+	#i=sys.argv[1]
 	inputFile = open('data.json')
 	data = json.load(inputFile)
 	tab_dist =[]

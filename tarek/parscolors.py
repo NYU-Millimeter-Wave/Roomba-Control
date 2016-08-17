@@ -3,6 +3,7 @@ import sys
 import Tkinter as tk
 import numpy as np
 import turtle
+import base64 
 
 app = tk.Tk()
 cv = turtle.ScrolledCanvas(app)
@@ -100,7 +101,9 @@ def dessin(tab_dist,lights):
 
 
 
-        turtle.mainloop()
+        #turtle.mainloop()
+	ts = turtle.getscreen()
+	ts.getcanvas().postscript(file="dessin.eps")
 
 func convertEPS(epsFilePath):
     os.system("convert " + str(epsFilePath) + " output.png")

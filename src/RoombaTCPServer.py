@@ -63,9 +63,10 @@ def signal_handler(signal, frame):
     sys.exit(0)
 
 def get_ip_address():
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.connect(("8.8.8.8", 80))
-    return s.getsockname()[0]
+    # s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    # s.connect(("8.8.8.8", 80))
+    # return s.getsockname()[0]
+    return '192.168.1.1'
 
 if __name__ == '__main__':
     port = 9000

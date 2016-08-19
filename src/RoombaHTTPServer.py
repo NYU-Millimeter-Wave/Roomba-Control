@@ -62,9 +62,10 @@ class RoombaHTTPServer(BaseHTTPServer.BaseHTTPRequestHandler):
 runSignal = True
 
 def get_ip_address():
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.connect(("8.8.8.8", 80))
-    return s.getsockname()[0]
+    # s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    # s.connect(("8.8.8.8", 80))
+    # return s.getsockname()[0]
+    return '192.168.1.1'
 
 def runWhileTrue(handler_class = RoombaHTTPServer,
         server_class = BaseHTTPServer.HTTPServer):

@@ -7,6 +7,7 @@ import signal
 import ReadingCommands
 from Roomba import Roomba
 from SimpleWebSocketServer import SimpleWebSocketServer, WebSocket
+from multiprocessing import Process
 
 global roomba
 
@@ -25,25 +26,33 @@ class SimpleHandler(WebSocket):
         # Moves the Roomba forward
         if str(self.data) == "START":
             print("Signalled to begin")
-            self.sendMessage(unicode('VSTART'))
             roomba.forward()
+            self.sendMessage(unicode('VSTART'))
 
         # Halts the Roomba movement to take reading
         if str(self.data) == "READING":
             print("Signalled to read, stopping movement")
-            self.sendMessage(unicode('VREADING'))
             roomba.stop()
             roomba.stopBumpListener()
             print("Movement halted")
-
-        # Signals the motor to spin the iPhone
-        if str(self.data) == "READNOW":
-            print("Taking reading...")
-            self.sendMessage(unicode('VREADNOW'))
+            self.signProc = Process(target=self.sendMessage(unicode('VREADING')))
+            self.signProc.start()
+            self.signProc.join()
             ReadingCommands.spin()
             print("Done taking reading")
             roomba.startBumpListener()
             roomba.forward()
+
+        # DEPRECATED
+        # # Signals the motor to spin the iPhone
+        # if str(self.data) == "READNOW":
+            # print("Taking reading...")
+            # self.signaller = Process(self.sendMessage(unicode('VREADNOW')))
+            # self.signaller.start()
+            # ReadingCommands.spin()
+            # print("Done taking reading")
+            # roomba.startBumpListener()
+            # roomba.forward()
 
         # Perform clean-up operations at end of experiment
         if str(self.data) == "ENDEXP":

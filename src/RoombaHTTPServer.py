@@ -27,7 +27,7 @@ class RoombaHTTPServer(BaseHTTPServer.BaseHTTPRequestHandler):
         self.end_headers()
 
         # Open the resultset and send it over
-        with open("resultset.json", 'r') as resultset:
+        with open("src/resultset.json", 'r') as resultset:
             jsonString = resultset.read()
             self.wfile.write(jsonString)
 

@@ -33,6 +33,7 @@ class SimpleHandler(WebSocket):
             print("Signalled to read, stopping movement")
             self.sendMessage(unicode('VREADING'))
             roomba.stop()
+            roomba.stopBumpListener()
             print("Movement halted")
 
         # Signals the motor to spin the iPhone
@@ -41,6 +42,7 @@ class SimpleHandler(WebSocket):
             self.sendMessage(unicode('VREADNOW'))
             ReadingCommands.spin()
             print("Done taking reading")
+            roomba.startBumpListener()
             roomba.forward()
 
         # Perform clean-up operations at end of experiment

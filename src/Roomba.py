@@ -24,12 +24,19 @@ class Roomba:
         self.bumpRight = False
 
         # Spawn sensor listener
+        self.startBumpListener()
+
+        print("Roomba is ready")
+
+    def startBumpListener(self):
         print("Spawning bump listener loop...")
         self.bumpLoop = Process(target=self.watchBump)
         self.bumpLoop.start()
         print("Spawned with pid " + str(self.bumpLoop.pid))
 
-        print("Roomba is ready")
+    def stopBumpListener(self):
+        print ("Stopping bump listener")
+        self.bumpLoop.terminate()
 
     def watchBump(self):
         while True:

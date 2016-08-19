@@ -3,6 +3,7 @@ import sys
 import Tkinter as tk
 import numpy as np
 import turtle
+import base64 
 
 app = tk.Tk()
 cv = turtle.ScrolledCanvas(app)
@@ -16,6 +17,7 @@ Light3Detected="purple"
 
 
 def pars(): 
+	#i=sys.argv[1]
 	inputFile = open('data.json')
 	data = json.load(inputFile)
 	tab_dist =[]
@@ -100,7 +102,9 @@ def dessin(tab_dist,lights):
 
 
 
-        turtle.mainloop()
+        #turtle.mainloop()
+	ts = turtle.getscreen()
+	ts.getcanvas().postscript(file="dessin.eps")
 
 func convertEPS(epsFilePath):
     os.system("convert " + str(epsFilePath) + " output.png")
